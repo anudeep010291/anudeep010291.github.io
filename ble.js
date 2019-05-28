@@ -9,24 +9,12 @@ var myService = 'battery_service';        // fill in a service you're looking fo
 var myCharacteristic = 0xffb2;   // fill in a characteristic from the service here
 
 function connect(){
-    navigator.bluetooth.requestDevice({ filters: [{ services: ['battery_service'] }] })
-  .then(device => device.gatt.connect())
-  .then(server => {
-    // Getting Battery Service...
-    return server.getPrimaryService('battery_service');
-  })
-  .then(service => {
-    // Getting Battery Level Characteristic...
-    return service.getCharacteristic('battery_level');
-  })
-  .then(characteristic => {
-    // Reading Battery Level...
-    return characteristic.readValue();
-  })
-  .then(value => {
-    console.log('Battery percentage is ' + value.getUint8(0));
-  })
-  .catch(error => { console.log(error); });
+  navigator.bluetooth.requestDevice({
+  filters: [{
+    namePrefix: 'Beacon Plus',
+  }],
+  optionalServices: ['E2C56DB5-DFFB-48D2-B060-D0F5A71096E0']
+});
 }
 
 // function connect(){
