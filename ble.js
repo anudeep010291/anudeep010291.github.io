@@ -5,7 +5,7 @@ created 6 Aug 2018
 by Tom Igoe
 */
 var myDevice;
-var myService = 0xffb0;        // fill in a service you're looking for here
+var myService = 'battery_service';        // fill in a service you're looking for here
 var myCharacteristic = 0xffb2;   // fill in a characteristic from the service here
 
 function connect(){
