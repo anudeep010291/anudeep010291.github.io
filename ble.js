@@ -9,7 +9,7 @@ var myService = 0xffb0;        // fill in a service you're looking for here
 var myCharacteristic = 0xffb2;   // fill in a characteristic from the service here
 
 function connect(){
-  og('Requesting any Bluetooth Device...');
+  log('Requesting any Bluetooth Device...');
   navigator.bluetooth.requestDevice({
    // filters: [...] <- Prefer filters to save energy & show relevant devices.
       acceptAllDevices: true,
