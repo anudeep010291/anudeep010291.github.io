@@ -58,6 +58,7 @@ function handleData(event) {
 function disconnect() {
   if (myDevice) {
     // disconnect:
+    console.log(myDevice)
     myDevice.gatt.disconnect();
   }
 }
