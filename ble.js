@@ -9,6 +9,7 @@ var myService = 0xffb0;        // fill in a service you're looking for here
 var myCharacteristic = 0xffb2;   // fill in a characteristic from the service here
 
 function connect(){
+ function onButtonClick() {
   let serviceUuid = '7f280001-8204-f393-e0a9-e50e24dcca9e';
   // if (serviceUuid.startsWith('0x')) {
   //   serviceUuid = parseInt(serviceUuid);
@@ -47,3 +48,4 @@ function connect(){
   });
 }
 
+ }
