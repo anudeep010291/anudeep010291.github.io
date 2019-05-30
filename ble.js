@@ -9,41 +9,56 @@ var myService = 0xffb0;        // fill in a service you're looking for here
 var myCharacteristic = 0xffb2;   // fill in a characteristic from the service here
 
 function connect(){
-  let serviceUuid = '7f280001-8204-f393-e0a9-e50e24dcca9e';
-  // if (serviceUuid.startsWith('0x')) {
-  //   serviceUuid = parseInt(serviceUuid);
-  // }
-
-  let characteristicUuid = '7f280002-8204-f393-e0a9-e50e24dcca9e';
-  // if (characteristicUuid.startsWith('0x')) {
-  //   characteristicUuid = parseInt(characteristicUuid);
-  // }
-
-  console.log('Requesting Bluetooth Device...');
-  navigator.bluetooth.requestDevice({filters: [{services: [serviceUuid]}]})
-  .then(device => {
-    console.log('Connecting to GATT Server...');
+  navigator.bluetooth.requestDevice({
+    // filters: [myFilters]       // you can't use filters and acceptAllDevices together
+    optionalServices: [myService],
+    acceptAllDevices: true
+  })
+  .then(function(device) {
+    // save the device returned so you can disconnect later:
+    myDevice = device;
+    console.log(device);
+    // connect to the device once you find it:
     return device.gatt.connect();
   })
-  .then(server => {
-    console.log('Getting Service...');
-    return server.getPrimaryService(serviceUuid);
+  .then(function(server) {
+    // get the primary service:
+    return server.getPrimaryService(myService);
   })
-  .then(service => {
-    console.log('Getting Characteristics...');
-    if (characteristicUuid) {
-      // Get all characteristics that match this UUID.
-      return service.getCharacteristics(characteristicUuid);
-    }
-    // Get all characteristics.
+  .then(function(service) {
+    // get the  characteristic:
     return service.getCharacteristics();
   })
-  .then(characteristics => {
-    console.log('> Characteristics: ' +
-      characteristics.map(c => c.uuid).join('\n' + ' '.repeat(19)));
+  .then(function(characteristics) {
+    // subscribe to the characteristic:
+    for (c in characteristics) {
+      characteristics[c].startNotifications()
+      .then(subscribeToChanges);
+    }
   })
-  .catch(error => {
-    console.log('Argh! ' + error);
+  .catch(function(error) {
+    // catch any errors:
+    console.error('Connection failed!', error);
   });
+}
 
- }
+// subscribe to changes from the meter:
+function subscribeToChanges(characteristic) {
+  characteristic.oncharacteristicvaluechanged = handleData;
+}
+
+// handle incoming data:
+function handleData(event) {
+  // get the data buffer from the meter:
+  var buf = new Uint8Array(event.target.value);
+  console.log(buf);
+}
+
+// disconnect function:
+function disconnect() {
+  if (myDevice) {
+    // disconnect:
+    console.log(myDevice)
+    myDevice.gatt.disconnect();
+  }
+}
