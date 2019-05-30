@@ -8,6 +8,8 @@
       this._characteristics = new Map();
     }
     connect() {
+ console.log("connect1::")
+
       return navigator.bluetooth.requestDevice({filters:[{services:[ 'heart_rate' ]}]})
       .then(device => {
         this.device = device;
@@ -24,6 +26,9 @@
           })
         ]);
       })
+
+ console.log("connect2::")
+
     }
 
     /* Heart Rate Service */

@@ -7,11 +7,15 @@ statusText.addEventListener('click', function() {
   heartRateSensor.connect()
   .then(() => heartRateSensor.startNotificationsHeartRateMeasurement().then(handleHeartRateMeasurement))
   .catch(error => {
+    console.log("error")
     statusText.textContent = error;
   });
 });
 
 function handleHeartRateMeasurement(heartRateMeasurement) {
+
+ console.log("heartRateMeasurement1::"+heartRateMeasurement)
+
   heartRateMeasurement.addEventListener('characteristicvaluechanged', event => {
     var heartRateMeasurement = heartRateSensor.parseHeartRate(event.target.value);
     console.log("heartRateMeasurement::"+heartRateMeasurement)
