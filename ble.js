@@ -4,17 +4,15 @@ A minimal Web Bluetooth connection example
 created 6 Aug 2018
 by Tom Igoe
 */
-var myDevice;
-var myService = 0xffb0;        // fill in a service you're looking for here
-var myCharacteristic = 0xffb2;   // fill in a characteristic from the service here
+
 
 function connect() {
-  let serviceUuid = document.querySelector('#service').value;
+  let serviceUuid = 0x180D;
   if (serviceUuid.startsWith('0x')) {
     serviceUuid = parseInt(serviceUuid);
   }
 
-  let characteristicUuid = document.querySelector('#characteristic').value;
+  let characteristicUuid = 0x2A37;
   if (characteristicUuid.startsWith('0x')) {
     characteristicUuid = parseInt(characteristicUuid);
   }
