@@ -37,12 +37,23 @@ function connect() {
     return service.getCharacteristics();
   })
   .then(characteristics => {
-    console.log('> Characteristics: ' +
-      characteristics.map(c => c.uuid).join('\n' + ' '.repeat(19)));
+    // console.log('> Characteristics: ' +
+    //   characteristics.map(c => c.uuid).join('\n' + ' '.repeat(19)));
+    characteristic.addEventListener('characteristicvaluechanged',
+                                  handleCharacteristicValueChanged);
+  console.log('Notifications have been started.');
   })
   .catch(error => {
     console.log('Argh! ' + error);
   });
+}
+
+
+function handleCharacteristicValueChanged(event) {
+  var value = event.target.value;
+  console.log('Received ' + value);
+  // TODO: Parse Heart Rate Measurement value.
+  // See https://github.com/WebBluetoothCG/demos/blob/gh-pages/heart-rate-sensor/heartRateSensor.js
 }
 // subscribe to changes from the meter:
 // function subscribeToChanges(characteristic) {
