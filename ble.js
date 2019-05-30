@@ -9,15 +9,15 @@ var myService = 'a3c87500-8ed3-4bdf-';        // fill in a service you're lookin
 var myCharacteristic = 0xffb2;   // fill in a characteristic from the service here
 
 function connect(){
-  navigator.bluetooth.requestDevice({ filters: [{ services: ['a3c87500-8ed3-4bdf-8a39-a01bebede295'] }] })
+  navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] })
   .then(device => device.gatt.connect())
   .then(server => {
     // Getting Battery Service...
-    return server.getPrimaryService('a3c87500-8ed3-4bdf-8a39-a01bebede295');
+    return server.getPrimaryService('heart_rate');
   })
   .then(service => {
     // Getting Battery Level Characteristic...
-    return service.getCharacteristic('a3c87504-8ed3-4bdf-8a39-a01bebede295');
+    return service.getCharacteristic('heart_rate_measurement');
   })
   .then(characteristic => {
     // Reading Battery Level...
