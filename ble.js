@@ -8,29 +8,44 @@ var myDevice;
 var myService = 0xffb0;        // fill in a service you're looking for here
 var myCharacteristic = 0xffb2;   // fill in a characteristic from the service here
 
-function connect(){
+function connect() {
+  let serviceUuid = document.querySelector('#service').value;
+  if (serviceUuid.startsWith('0x')) {
+    serviceUuid = parseInt(serviceUuid);
+  }
 
+  let characteristicUuid = document.querySelector('#characteristic').value;
+  if (characteristicUuid.startsWith('0x')) {
+    characteristicUuid = parseInt(characteristicUuid);
+  }
 
-    navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] })
-    .then(device => device.gatt.connect())
-    .then(server => server.getPrimaryService('heart_rate'))
-    .then(service => service.getCharacteristic('heart_rate_measurement'))
-    .then(characteristic => characteristic.startNotifications())
-    .then(characteristic => {
-      characteristic.addEventListener('characteristicvaluechanged',
-                                      handleCharacteristicValueChanged);
-      console.log('Notifications have been started.');
-    })
-    .catch(error => { console.log(error); });
-
-    function handleCharacteristicValueChanged(event) {
-      var value = event.target.value;
-      console.log('Received ' + value);
-      // TODO: Parse Heart Rate Measurement value.
-      // See https://github.com/WebBluetoothCG/demos/blob/gh-pages/heart-rate-sensor/heartRateSensor.js
+  log('Requesting Bluetooth Device...');
+  navigator.bluetooth.requestDevice({filters: [{services: [serviceUuid]}]})
+  .then(device => {
+    log('Connecting to GATT Server...');
+    return device.gatt.connect();
+  })
+  .then(server => {
+    log('Getting Service...');
+    return server.getPrimaryService(serviceUuid);
+  })
+  .then(service => {
+    log('Getting Characteristics...');
+    if (characteristicUuid) {
+      // Get all characteristics that match this UUID.
+      return service.getCharacteristics(characteristicUuid);
     }
+    // Get all characteristics.
+    return service.getCharacteristics();
+  })
+  .then(characteristics => {
+    log('> Characteristics: ' +
+      characteristics.map(c => c.uuid).join('\n' + ' '.repeat(19)));
+  })
+  .catch(error => {
+    log('Argh! ' + error);
+  });
 }
-
 // subscribe to changes from the meter:
 // function subscribeToChanges(characteristic) {
 //   characteristic.oncharacteristicvaluechanged = handleData;
@@ -51,3 +66,7 @@ function connect(){
 //     myDevice.gatt.disconnect();
 //   }
 // }
+
+
+
+// Characteristics: 00002a37-0000-1000-8000-00805f9b34fb
