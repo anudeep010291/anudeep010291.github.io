@@ -7,12 +7,14 @@ by Tom Igoe
 
 
 function connect() {
-  let serviceUuid = 0x180D;
+  // let serviceUuid = 0x180D;
+  let serviceUuid = "E2C56DB5-DFFB-48D2-B060-D0F5A71096E0";
+
   // if (serviceUuid.startsWith('0x')) {
   //   serviceUuid = parseInt(serviceUuid);
   // }
 
-  let characteristicUuid = 0x2A37;
+  // let characteristicUuid = 0x2A37;
   // if (characteristicUuid.startsWith('0x')) {
   //   characteristicUuid = parseInt(characteristicUuid);
   // }
@@ -23,21 +25,21 @@ function connect() {
     console.log('Connecting to GATT Server...');
     return device.gatt.connect();
   })
-  .then(server => {
-    console.log('Getting Service...');
-    return server.getPrimaryService(serviceUuid);
-  })
-  .then(service => {
-  // Getting Battery Level Characteristic...
-  return service.getCharacteristic(characteristicUuid);
-})
-  .then(characteristic => {
-  // Reading Battery Level...
-  return characteristic.readValue();
-})
-.then(value => {
-  console.log('Heart Rate is:: ' + value.getUint8(0));
-})
+//   .then(server => {
+//     console.log('Getting Service...');
+//     return server.getPrimaryService(serviceUuid);
+//   })
+//   .then(service => {
+//   // Getting Battery Level Characteristic...
+//   return service.getCharacteristic(characteristicUuid);
+// })
+//   .then(characteristic => {
+//   // Reading Battery Level...
+//   return characteristic.readValue();
+// })
+// .then(value => {
+//   console.log('Heart Rate is:: ' + value.getUint8(0));
+// })
 
 
   .catch(error => {
