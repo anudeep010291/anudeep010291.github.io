@@ -8,7 +8,8 @@ by Tom Igoe
 
 function connect() {
   // let serviceUuid = 0x180D;
-  let serviceUuid = "a3c87500-8ed3-4bdf-8a39-a01bebede295";
+  // let serviceUuid = "a3c87500-8ed3-4bdf-8a39-a01bebede295";
+  let serviceUuid = 0xff;
 
   // if (serviceUuid.startsWith('0x')) {
   //   serviceUuid = parseInt(serviceUuid);
