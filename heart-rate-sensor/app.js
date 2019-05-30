@@ -14,6 +14,7 @@ statusText.addEventListener('click', function() {
 function handleHeartRateMeasurement(heartRateMeasurement) {
   heartRateMeasurement.addEventListener('characteristicvaluechanged', event => {
     var heartRateMeasurement = heartRateSensor.parseHeartRate(event.target.value);
+    console.log("heartRateMeasurement::"+heartRateMeasurement)
     statusText.innerHTML = heartRateMeasurement.heartRate + ' &#x2764;';
     heartRates.push(heartRateMeasurement.heartRate);
     drawWaves();
