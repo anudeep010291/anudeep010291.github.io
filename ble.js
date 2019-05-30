@@ -28,33 +28,25 @@ function connect() {
     return server.getPrimaryService(serviceUuid);
   })
   .then(service => {
-    console.log('Getting Characteristics...');
-    if (characteristicUuid) {
-      // Get all characteristics that match this UUID.
-      return service.getCharacteristics(characteristicUuid);
-    }
-    // Get all characteristics.
-    return service.getCharacteristics();
-  })
-  .then(characteristics => {
-    // console.log('> Characteristics: ' +
-    //   characteristics.map(c => c.uuid).join('\n' + ' '.repeat(19)));
-    characteristic.addEventListener('characteristicvaluechanged',
-                                  handleCharacteristicValueChanged);
-  console.log('Notifications have been started.');
-  })
+  // Getting Battery Level Characteristic...
+  return service.getCharacteristic(characteristicUuid);
+})
+  .then(characteristic => {
+  // Reading Battery Level...
+  return characteristic.readValue();
+})
+.then(value => {
+  console.log('Heart Rate is:: ' + value.getUint8(0));
+})
+
+
   .catch(error => {
     console.log('Argh! ' + error);
   });
 }
 
 
-function handleCharacteristicValueChanged(event) {
-  var value = event.target.value;
-  console.log('Received ' + value);
-  // TODO: Parse Heart Rate Measurement value.
-  // See https://github.com/WebBluetoothCG/demos/blob/gh-pages/heart-rate-sensor/heartRateSensor.js
-}
+
 // subscribe to changes from the meter:
 // function subscribeToChanges(characteristic) {
 //   characteristic.oncharacteristicvaluechanged = handleData;
