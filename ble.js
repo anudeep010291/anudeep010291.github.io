@@ -5,60 +5,47 @@ created 6 Aug 2018
 by Tom Igoe
 */
 var myDevice;
-var myService = 0xffb0;        // fill in a service you're looking for here
+var myService = 'a3c87500-8ed3-4bdf-';        // fill in a service you're looking for here
 var myCharacteristic = 0xffb2;   // fill in a characteristic from the service here
 
 function connect(){
-  navigator.bluetooth.requestDevice({
-    // filters: [myFilters]       // you can't use filters and acceptAllDevices together
-    optionalServices: [myService],
-    acceptAllDevices: true
+  navigator.bluetooth.requestDevice({ filters: [{ services: ['a3c87500-8ed3-4bdf-8a39-a01bebede295'] }] })
+  .then(device => device.gatt.connect())
+  .then(server => {
+    // Getting Battery Service...
+    return server.getPrimaryService('a3c87500-8ed3-4bdf-8a39-a01bebede295');
   })
-  .then(function(device) {
-    // save the device returned so you can disconnect later:
-    myDevice = device;
-    console.log(device);
-    // connect to the device once you find it:
-    return device.gatt.connect();
+  .then(service => {
+    // Getting Battery Level Characteristic...
+    return service.getCharacteristic('a3c87504-8ed3-4bdf-8a39-a01bebede295');
   })
-  .then(function(server) {
-    // get the primary service:
-    return server.getPrimaryService(myService);
+  .then(characteristic => {
+    // Reading Battery Level...
+    return characteristic.readValue();
   })
-  .then(function(service) {
-    // get the  characteristic:
-    return service.getCharacteristics();
+  .then(value => {
+    console.log('Battery percentage is ' + value.getUint8(0));
   })
-  .then(function(characteristics) {
-    // subscribe to the characteristic:
-    for (c in characteristics) {
-      characteristics[c].startNotifications()
-      .then(subscribeToChanges);
-    }
-  })
-  .catch(function(error) {
-    // catch any errors:
-    console.error('Connection failed!', error);
-  });
+  .catch(error => { console.log(error); });
 }
 
-// subscribe to changes from the meter:
-function subscribeToChanges(characteristic) {
-  characteristic.oncharacteristicvaluechanged = handleData;
-}
+// // subscribe to changes from the meter:
+// function subscribeToChanges(characteristic) {
+//   characteristic.oncharacteristicvaluechanged = handleData;
+// }
 
-// handle incoming data:
-function handleData(event) {
-  // get the data buffer from the meter:
-  var buf = new Uint8Array(event.target.value);
-  console.log(buf);
-}
+// // handle incoming data:
+// function handleData(event) {
+//   // get the data buffer from the meter:
+//   var buf = new Uint8Array(event.target.value);
+//   console.log(buf);
+// }
 
-// disconnect function:
-function disconnect() {
-  if (myDevice) {
-    // disconnect:
-    console.log(myDevice)
-    myDevice.gatt.disconnect();
-  }
-}
+// // disconnect function:
+// function disconnect() {
+//   if (myDevice) {
+//     // disconnect:
+//     console.log(myDevice)
+//     myDevice.gatt.disconnect();
+//   }
+// }
